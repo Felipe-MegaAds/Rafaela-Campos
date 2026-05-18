@@ -5,6 +5,9 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    // Log de depuração para confirmar o carregamento correto do script no navegador (Vercel/Produção)
+    console.log("Dra. Rafaela Campos - script.js carregado com sucesso!");
+
     /* --- Mobile Menu Toggle --- */
     const menuToggle = document.getElementById('menu-toggle');
     const nav = document.getElementById('nav');
@@ -30,13 +33,15 @@ document.addEventListener('DOMContentLoaded', () => {
     /* --- Header Scrolled state --- */
     const header = document.getElementById('header');
     
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-    });
+    if (header) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    }
 
     /* --- FAQ Accordion --- */
     const faqItems = document.querySelectorAll('.faq-item');
@@ -44,25 +49,32 @@ document.addEventListener('DOMContentLoaded', () => {
     faqItems.forEach(item => {
         const question = item.querySelector('.faq-question');
         
-        question.addEventListener('click', () => {
-            // Close all other open items
-            faqItems.forEach(otherItem => {
-                if (otherItem !== item && otherItem.classList.contains('active')) {
-                    otherItem.classList.remove('active');
-                    otherItem.querySelector('.faq-answer').style.maxHeight = null;
+        if (question) {
+            question.addEventListener('click', () => {
+                // Close all other open items
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item && otherItem.classList.contains('active')) {
+                        otherItem.classList.remove('active');
+                        const otherAnswer = otherItem.querySelector('.faq-answer');
+                        if (otherAnswer) {
+                            otherAnswer.style.maxHeight = null;
+                        }
+                    }
+                });
+                
+                // Toggle current item
+                item.classList.toggle('active');
+                const answer = item.querySelector('.faq-answer');
+                
+                if (answer) {
+                    if (item.classList.contains('active')) {
+                        answer.style.maxHeight = answer.scrollHeight + "px";
+                    } else {
+                        answer.style.maxHeight = null;
+                    }
                 }
             });
-            
-            // Toggle current item
-            item.classList.toggle('active');
-            const answer = item.querySelector('.faq-answer');
-            
-            if (item.classList.contains('active')) {
-                answer.style.maxHeight = answer.scrollHeight + "px";
-            } else {
-                answer.style.maxHeight = null;
-            }
-        });
+        }
     });
 
     /* --- Scroll Animation (Intersection Observer) --- */
